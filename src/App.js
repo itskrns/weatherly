@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect, useState } from "react";
+import InputBar from "./Components/InputBar";
+import Temp from "./Components/Temp";
+import TimeAndDate from "./Components/TimeAndDate";
+import TopBar from "./Components/TopBar";
+import getWeatherData from "./Components/Script.js";
+import Cities from "./Components/Cities.jsx";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+  
 
-function App() {
+export default function App() {
+  const [query, setquery] = useState({ q: "Sirsa" });
+  const [weather, setweather] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const message = query.q ? query.q : 'curret location.'
+      toast.info(`Fetching weather for ${message}`)
+      await getWeatherData({ ...query }).then((data) => {
+        toast.success(`Successfully fetched weather data for ${data.name}`)
+        setweather(data)
+      });
+    };
+    fetchData();
+  }, [query]); 
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="mx-auto max-w-screen-md mt-1 mb-10 py-5 px-32 bg-gradient-to-br from-blue-700 to-green-700 h-fit shadow-xl shadow-gray-400 rounded">
+      <TopBar/>
+      <InputBar setquery={setquery} />
+
+      {weather && (
+        <div>
+          <TimeAndDate weather={weather} />
+          <Temp weather={weather} />
+        </div>
+      )}
+
+      <Cities setquery={setquery} />
+
+      <ToastContainer autoClose={3000} theme="colored" newestOnTop={true}/>
     </div>
   );
 }
-
-export default App;
