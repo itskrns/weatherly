@@ -4,7 +4,7 @@ import InputBar from "./Components/InputBar";
 import Temp from "./Components/Temp";
 import TimeAndDate from "./Components/TimeAndDate";
 import TopBar from "./Components/TopBar";
-import getWeatherData from "./Components/Script.js";
+import {getWeatherData} from "./Components/Script.js";
 import Cities from "./Components/Cities.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,9 +18,11 @@ export default function App() {
     const fetchData = async () => {
       const message = query.q ? query.q : 'curret location.'
       toast.info(`Fetching weather for ${message}`)
-      await getWeatherData({ ...query }).then((data) => {
-        toast.success(`Successfully fetched weather data for ${data.name}`)
+      await getWeatherData({ ...query }, setquery).then((data) => {
+        toast.success(`Successfully fetched weather data for ${data.name? data.name: 'sirsa'}`)
         setweather(data)
+      }).catch(error => {
+        toast.error("City not found")
       });
     };
     fetchData();

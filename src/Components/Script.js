@@ -1,12 +1,34 @@
 import moment from "moment/moment";
+import axios from "axios";
 
 const apiKey = "bbf5947563682b7c072e5d9861b27bb7";
 
+async function getForcastData(city) {
+  let response;
+    if (city.q)
+      response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city.q}&appid=${apiKey}`
+      );
+    else
+      response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forcast?lat=${city.lat}&lon=${city.lon}&units=metric&appid=${apiKey}`
+      );
+
+    if (response.status === 200) return filterData(response.data)
+}
+
 const getWeatherData = async (city) => {
-  const url = new URL("https://api.openweathermap.org/data/2.5/weather")
-  url.search = new URLSearchParams({...city, units: "metric", appid: apiKey,});
-  const response = await fetch(`url`).then((res) => res.json()).then((data) => filterData(data))
-  return response
+  let response;
+  if (city.q)
+    response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city.q}&units=metric&appid=${apiKey}`
+    );
+  else
+    response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&units=metric&appid=${apiKey}`
+    );
+
+  if (response.status === 200) return filterData(response.data)
 }
 
 const filterData = (data) => {
@@ -49,5 +71,4 @@ const cleanTime = (dt) => {
   return moment(dt * 1000).format("h:mm A");
 };
 
-export default getWeatherData;
-export { weatherIcons, cleanDate, cleanTime};
+export { weatherIcons, cleanDate, cleanTime, getForcastData, getWeatherData};
