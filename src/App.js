@@ -29,7 +29,7 @@ export default function App() {
   }, [query]); 
 
   return (
-    <div className="mx-auto max-w-screen-md mt-1 mb-10 py-5 px-32 bg-gradient-to-br from-blue-700 to-green-700 h-fit shadow-xl shadow-gray-400 rounded">
+    <div className="mx-auto max-w-screen-md mt-1 mb-10 py-5 px-32 bg-gradient-to-br from-orange-700 to-red-400 h-fit shadow-xl shadow-gray-400 rounded">
       <TopBar/>
       <InputBar setquery={setquery} />
 
